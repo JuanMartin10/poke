@@ -1,10 +1,7 @@
 "use client";
 
 import { usePokemonListContext } from "@/contexts";
-import {
-  usePokemonTypesQuery,
-  usePokemonGenerationsQuery
-} from "@/lib/api/queries/pokemon";
+import { api } from "@/utils/api";
 import {
   SearchInput,
   Select,
@@ -19,8 +16,9 @@ export function FilterBar() {
   const { state, updateFilters } = usePokemonListContext();
   const { searchTerm, selectedType, selectedGeneration } = state.filters;
 
-  const { data: availableTypes = [] } = usePokemonTypesQuery();
-  const { data: availableGenerations = [] } = usePokemonGenerationsQuery();
+  const { data: availableTypes = [] } = api.pokemon.getTypes.useQuery();
+  const { data: availableGenerations = [] } =
+    api.pokemon.getGenerations.useQuery();
 
   const formatGeneration = (generation: string) => {
     return generation.replace("generation-", "Gen ").toUpperCase();

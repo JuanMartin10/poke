@@ -20,9 +20,10 @@ A modern Pokédex application built with Next.js, TypeScript, and the PokéAPI.
 
 - **Next.js 15** - App Router
 - **TypeScript** - Type safety
+- **tRPC** - End-to-end type-safe API
 - **TailwindCSS v4** - Styling
 - **Radix UI** - UI components
-- **TanStack Query** - Data fetching and caching
+- **TanStack Query** - Data fetching and caching (used by tRPC)
 - **PokéAPI** - Pokémon data source
 
 ## Getting Started
@@ -61,7 +62,9 @@ src/
 ├── hooks/              # Custom React hooks
 ├── lib/                # API services and utilities
 ├── providers/          # App-level providers
+├── server/             # tRPC router and procedures
 ├── styles/             # Global styles
 ├── types/              # TypeScript definitions
+├── utils/              # Utility functions and API client
 └── views/              # Page components
 ```

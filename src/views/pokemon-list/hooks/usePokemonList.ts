@@ -1,10 +1,5 @@
 import { useMemo, useRef, useEffect } from "react";
-import {
-  usePokemonInfiniteQuery,
-  usePokemonSearchQuery,
-  usePokemonByGenerationQuery,
-  usePokemonByTypeQuery
-} from "@/lib/api/queries/pokemon";
+import { api } from "@/utils/api";
 import { useDebounce } from "@/hooks";
 import type { PokemonWithDetails } from "@/types";
 
@@ -29,8 +24,18 @@ export function usePokemonList({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage
-  } = usePokemonInfiniteQuery(
-    !(searchTerm || debouncedSearchTerm || selectedGeneration || selectedType)
+  } = api.pokemon.getInfinite.useInfiniteQuery(
+    { pageSize: 20 },
+    {
+      getNextPageParam: (lastPage) =>
+        lastPage.nextCursor !== null ? lastPage.nextCursor : undefined,
+      enabled: !(
+        searchTerm ||
+        debouncedSearchTerm ||
+        selectedGeneration ||
+        selectedType
+      )
+    }
   );
 
   const {
@@ -38,21 +43,30 @@ export function usePokemonList({
     isLoading: isLoadingSearch,
     isError: isErrorSearch,
     error: errorSearch
-  } = usePokemonSearchQuery(debouncedSearchTerm);
+  } = api.pokemon.search.useQuery(
+    { searchTerm: debouncedSearchTerm },
+    { enabled: !!debouncedSearchTerm }
+  );
 
   const {
     data: generationData,
     isLoading: isLoadingGeneration,
     isError: isErrorGeneration,
     error: errorGeneration
-  } = usePokemonByGenerationQuery(selectedGeneration || "");
+  } = api.pokemon.getByGeneration.useQuery(
+    { generation: selectedGeneration || "" },
+    { enabled: !!selectedGeneration }
+  );
 
   const {
     data: typeData,
     isLoading: isLoadingType,
     isError: isErrorType,
     error: errorType
-  } = usePokemonByTypeQuery(selectedType || "");
+  } = api.pokemon.getByType.useQuery(
+    { type: selectedType || "" },
+    { enabled: !!selectedType }
+  );
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -80,7 +94,12 @@ export function usePokemonList({
       allPokemon = infiniteScrollPokemon;
     }
 
-    return allPokemon.sort(
+    const uniquePokemon = allPokemon.filter(
+      (pokemon, index, array) =>
+        array.findIndex((p) => p.id === pokemon.id) === index
+    );
+
+    return uniquePokemon.sort(
       (a: PokemonWithDetails, b: PokemonWithDetails) => a.id - b.id
     );
   }, [

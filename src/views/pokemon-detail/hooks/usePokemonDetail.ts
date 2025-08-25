@@ -1,5 +1,5 @@
 import type { Pokemon, PokemonSpecies, PokemonWithDetails } from "@/types";
-import { usePokemonDetailQuery } from "@/lib/api/queries/pokemon";
+import { api } from "@/utils/api";
 
 interface UsePokemonDetailReturn {
   pokemon: Pokemon | undefined;
@@ -7,11 +7,13 @@ interface UsePokemonDetailReturn {
   evolutions: PokemonWithDetails[] | undefined;
   isLoading: boolean;
   isError: boolean;
-  error: Error | null;
+  error: any;
 }
 
 export function usePokemonDetail(pokemonId: string): UsePokemonDetailReturn {
-  const { data, isLoading, isError, error } = usePokemonDetailQuery(pokemonId);
+  const { data, isLoading, isError, error } = api.pokemon.getDetail.useQuery({
+    id: pokemonId
+  });
 
   return {
     pokemon: data?.pokemon,

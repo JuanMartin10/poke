@@ -1,11 +1,12 @@
 import { PokemonDetailPage } from "@/views/pokemon-detail";
 
 interface PokemonPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function PokemonPage({ params }: PokemonPageProps) {
-  return <PokemonDetailPage pokemonId={params.id} />;
+export default async function PokemonPage({ params }: PokemonPageProps) {
+  const { id } = await params;
+  return <PokemonDetailPage pokemonId={id} />;
 }
