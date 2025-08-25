@@ -1,0 +1,1 @@
+export { PokemonEvolutions } from "./PokemonEvolutions";

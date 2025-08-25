@@ -1,18 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { PokemonCard } from "@/components";
 import { Button } from "@/components/ui";
 import type { PokemonWithDetails } from "@/types";
 import { usePokemonList } from "@/views/pokemon-list/hooks/usePokemonList";
 import { FilterBar } from "./components";
+import { usePokemonListContext } from "@/contexts";
 
 export function PokemonListPage() {
-  const [filters, setFilters] = useState({
-    searchTerm: "",
-    selectedType: "",
-    selectedGeneration: ""
-  });
+  const router = useRouter();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const { state, updateScrollPosition } = usePokemonListContext();
 
   const {
     pokemon,
@@ -23,15 +24,38 @@ export function PokemonListPage() {
     isFetchingNextPage,
     loadMoreRef,
     isSearching
-  } = usePokemonList(filters);
+  } = usePokemonList(state.filters);
+
+  useEffect(() => {
+    if (state.scrollPosition > 0 && scrollContainerRef.current) {
+      const timer = setTimeout(() => {
+        window.scrollTo({
+          top: state.scrollPosition,
+          behavior: "instant"
+        });
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+    return () => {};
+  }, [state.scrollPosition]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      updateScrollPosition(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [updateScrollPosition]);
 
   return (
-    <div className="container mx-auto py-8">
+    <div ref={scrollContainerRef} className="container mx-auto py-8">
       <div className="mb-8">
         <h1 className="mb-2 text-4xl font-bold tracking-tight">Pokédex</h1>
       </div>
 
-      <FilterBar onFiltersChange={setFilters} />
+      <FilterBar />
 
       {isSearching && (
         <div className="text-muted-foreground mb-4 flex items-center gap-2 text-sm">
@@ -74,11 +98,15 @@ export function PokemonListPage() {
         <>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {pokemon.map((poke: PokemonWithDetails) => (
-              <PokemonCard key={poke.id} pokemon={poke} onClick={() => {}} />
+              <PokemonCard
+                key={poke.id}
+                pokemon={poke}
+                onClick={() => router.push(`/pokemon/${poke.id}`)}
+              />
             ))}
           </div>
 
-          {!filters.searchTerm && (
+          {!state.filters.searchTerm && (
             <div ref={loadMoreRef} className="mt-8 flex justify-center">
               {isFetchingNextPage && (
                 <div className="text-center">

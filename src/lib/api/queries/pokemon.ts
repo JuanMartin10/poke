@@ -9,9 +9,15 @@ import {
   getPokemonTypes,
   getPokemonGenerations,
   getPokemonByType,
-  getPokemonByGeneration
+  getPokemonByGeneration,
+  getPokemonDetail
 } from "../services/pokemon";
-import type { PokemonPageResponse, PokemonWithDetails } from "@/types";
+import type {
+  PokemonPageResponse,
+  PokemonWithDetails,
+  Pokemon,
+  PokemonSpecies
+} from "@/types";
 
 export function usePokemonInfiniteQuery(enabled: boolean = true) {
   return useInfiniteQuery<
@@ -78,5 +84,23 @@ export function usePokemonSearchQuery(searchTerm: string) {
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     retry: 1
+  });
+}
+
+export function usePokemonDetailQuery(pokemonId: string) {
+  return useQuery<
+    {
+      pokemon: Pokemon;
+      species: PokemonSpecies;
+      evolutions: PokemonWithDetails[];
+    },
+    Error
+  >({
+    queryKey: ["pokemon", "detail", pokemonId],
+    queryFn: () => getPokemonDetail(pokemonId),
+    enabled: !!pokemonId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    retry: 2
   });
 }

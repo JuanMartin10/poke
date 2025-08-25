@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { usePokemonListContext } from "@/contexts";
 import {
   usePokemonTypesQuery,
   usePokemonGenerationsQuery
@@ -15,18 +15,9 @@ import {
   Button
 } from "@/components/ui";
 
-interface FilterBarProps {
-  onFiltersChange: (filters: {
-    searchTerm: string;
-    selectedType: string;
-    selectedGeneration: string;
-  }) => void;
-}
-
-export function FilterBar({ onFiltersChange }: FilterBarProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedType, setSelectedType] = useState("");
-  const [selectedGeneration, setSelectedGeneration] = useState("");
+export function FilterBar() {
+  const { state, updateFilters } = usePokemonListContext();
+  const { searchTerm, selectedType, selectedGeneration } = state.filters;
 
   const { data: availableTypes = [] } = usePokemonTypesQuery();
   const { data: availableGenerations = [] } = usePokemonGenerationsQuery();
@@ -39,18 +30,36 @@ export function FilterBar({ onFiltersChange }: FilterBarProps) {
     return type.charAt(0).toUpperCase() + type.slice(1);
   };
 
-  useEffect(() => {
-    onFiltersChange({
-      searchTerm,
+  const handleSearchChange = (value: string) => {
+    updateFilters({
+      searchTerm: value,
       selectedType,
       selectedGeneration
     });
-  }, [searchTerm, selectedType, selectedGeneration, onFiltersChange]);
+  };
+
+  const handleTypeChange = (value: string) => {
+    updateFilters({
+      searchTerm,
+      selectedType: value,
+      selectedGeneration
+    });
+  };
+
+  const handleGenerationChange = (value: string) => {
+    updateFilters({
+      searchTerm,
+      selectedType,
+      selectedGeneration: value
+    });
+  };
 
   const clearAllFilters = () => {
-    setSearchTerm("");
-    setSelectedType("");
-    setSelectedGeneration("");
+    updateFilters({
+      searchTerm: "",
+      selectedType: "",
+      selectedGeneration: ""
+    });
   };
 
   const hasActiveFilters = searchTerm || selectedType || selectedGeneration;
@@ -63,14 +72,14 @@ export function FilterBar({ onFiltersChange }: FilterBarProps) {
             <SearchInput
               placeholder="Buscar Pokémon (incluye evoluciones)..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onClear={() => setSearchTerm("")}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              onClear={() => handleSearchChange("")}
             />
           </div>
 
           <div className="flex gap-4">
             <div className="min-w-[160px]">
-              <Select value={selectedType} onValueChange={setSelectedType}>
+              <Select value={selectedType} onValueChange={handleTypeChange}>
                 <SelectTrigger>
                   <SelectValue placeholder="Tipo" />
                 </SelectTrigger>
@@ -87,7 +96,7 @@ export function FilterBar({ onFiltersChange }: FilterBarProps) {
             <div className="min-w-[160px]">
               <Select
                 value={selectedGeneration}
-                onValueChange={setSelectedGeneration}
+                onValueChange={handleGenerationChange}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Generación" />
@@ -123,7 +132,7 @@ export function FilterBar({ onFiltersChange }: FilterBarProps) {
             <div className="bg-primary/10 text-primary flex items-center gap-1 rounded-full px-3 py-1 text-sm">
               <span>Búsqueda: &quot;{searchTerm}&quot;</span>
               <button
-                onClick={() => setSearchTerm("")}
+                onClick={() => handleSearchChange("")}
                 className="hover:bg-primary/20 rounded-full p-0.5"
               >
                 <span className="text-xs">✕</span>
@@ -134,7 +143,7 @@ export function FilterBar({ onFiltersChange }: FilterBarProps) {
             <div className="bg-primary/10 text-primary flex items-center gap-1 rounded-full px-3 py-1 text-sm">
               <span>Tipo: {formatType(selectedType)}</span>
               <button
-                onClick={() => setSelectedType("")}
+                onClick={() => handleTypeChange("")}
                 className="hover:bg-primary/20 rounded-full p-0.5"
               >
                 <span className="text-xs">✕</span>
@@ -145,7 +154,7 @@ export function FilterBar({ onFiltersChange }: FilterBarProps) {
             <div className="bg-primary/10 text-primary flex items-center gap-1 rounded-full px-3 py-1 text-sm">
               <span>Generación: {formatGeneration(selectedGeneration)}</span>
               <button
-                onClick={() => setSelectedGeneration("")}
+                onClick={() => handleGenerationChange("")}
                 className="hover:bg-primary/20 rounded-full p-0.5"
               >
                 <span className="text-xs">✕</span>

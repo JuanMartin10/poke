@@ -14,10 +14,18 @@ export interface Pokemon {
     };
   };
   types: PokemonType[];
+  stats: PokemonStat[];
 }
 
 export interface PokemonType {
   type: {
+    name: string;
+  };
+}
+
+export interface PokemonStat {
+  base_stat: number;
+  stat: {
     name: string;
   };
 }

@@ -4,6 +4,7 @@ import * as React from "react";
 import type { ReactNode } from "react";
 import { QueryProvider } from "./query-provider";
 import { ThemeProvider } from "./theme-provider";
+import { PokemonListProvider } from "@/contexts";
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -18,7 +19,9 @@ export function AppProviders({ children }: AppProvidersProps) {
       disableTransitionOnChange
       storageKey="poke-ui-theme"
     >
-      <QueryProvider>{children}</QueryProvider>
+      <QueryProvider>
+        <PokemonListProvider>{children}</PokemonListProvider>
+      </QueryProvider>
     </ThemeProvider>
   );
 }

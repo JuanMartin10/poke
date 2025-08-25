@@ -1,0 +1,1 @@
+export { usePokemonDetail } from "./usePokemonDetail";

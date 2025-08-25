@@ -372,3 +372,34 @@ export async function searchPokemonByName(
     return [];
   }
 }
+
+export async function getPokemonDetail(id: string): Promise<{
+  pokemon: Pokemon;
+  species: PokemonSpecies;
+  evolutions: PokemonWithDetails[];
+}> {
+  const pokemon = await getPokemon(id);
+  const species = await getPokemonSpecies(pokemon.id);
+  const evolutionFamily = await getPokemonEvolutionFamily(pokemon.name);
+
+  const evolutions = await Promise.all(
+    evolutionFamily.map(async (name): Promise<PokemonWithDetails> => {
+      const pokemonData = await getPokemon(name);
+      const speciesData = await getPokemonSpecies(pokemonData.id);
+
+      return {
+        id: pokemonData.id,
+        name: pokemonData.name,
+        image:
+          pokemonData.sprites.other["official-artwork"].front_default ||
+          pokemonData.sprites.front_default,
+        generation: speciesData.generation.name,
+        types: pokemonData.types.map((type) => type.type.name)
+      };
+    })
+  );
+
+  evolutions.sort((a, b) => a.id - b.id);
+
+  return { pokemon, species, evolutions };
+}
