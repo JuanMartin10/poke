@@ -1,4 +1,5 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.example.com";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://pokeapi.co/api/v2";
 
 export class ApiError extends Error {
   constructor(
@@ -16,7 +17,7 @@ export async function apiRequest<T>(
   options: RequestInit = {}
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
-  
+
   const config: RequestInit = {
     headers: {
       "Content-Type": "application/json",
@@ -48,21 +49,21 @@ export async function apiRequest<T>(
 export const api = {
   get: <T>(endpoint: string, options?: RequestInit) =>
     apiRequest<T>(endpoint, { method: "GET", ...options }),
-  
+
   post: <T>(endpoint: string, data?: unknown, options?: RequestInit) =>
     apiRequest<T>(endpoint, {
       method: "POST",
       body: JSON.stringify(data),
       ...options
     }),
-  
+
   put: <T>(endpoint: string, data?: unknown, options?: RequestInit) =>
     apiRequest<T>(endpoint, {
       method: "PUT",
       body: JSON.stringify(data),
       ...options
     }),
-  
+
   delete: <T>(endpoint: string, options?: RequestInit) =>
     apiRequest<T>(endpoint, { method: "DELETE", ...options })
 };

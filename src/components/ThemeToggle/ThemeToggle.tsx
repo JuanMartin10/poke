@@ -10,9 +10,12 @@ export function ThemeToggle() {
 
   useEffect(() => {
     setMounted(true);
-    
-    // Si es la primera vez y tema es "system", convertir a valor explícito
-    if (theme === "system" && systemTheme && !localStorage.getItem("poke-ui-theme")) {
+
+    if (
+      theme === "system" &&
+      systemTheme &&
+      !localStorage.getItem("poke-ui-theme")
+    ) {
       setTheme(systemTheme);
     }
   }, [theme, systemTheme, setTheme]);
@@ -30,7 +33,6 @@ export function ThemeToggle() {
     setTheme(newTheme);
   };
 
-  // Usar resolvedTheme para obtener el tema real (incluye system)
   const currentTheme = resolvedTheme || theme;
 
   return (

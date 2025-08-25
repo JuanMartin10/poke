@@ -1,2 +1,4 @@
 export * from "./ui";
-export { ThemeToggle } from "./theme-toggle";
+export * from "./ThemeToggle";
+export * from "./PokemonCard";
+export * from "./Header";

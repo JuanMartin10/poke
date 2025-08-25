@@ -1,5 +1,5 @@
-import { HomePage } from "@/views";
+import { PokemonListPage } from "@/views";
 
 export default function Home() {
-  return <HomePage />;
+  return <PokemonListPage />;
 }
