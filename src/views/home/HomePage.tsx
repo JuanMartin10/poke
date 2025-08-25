@@ -1,6 +1,17 @@
 "use client";
 
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label, Separator, ThemeToggle } from "@/components";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  Separator,
+  ThemeToggle
+} from "@/components";
 import { cn } from "@/lib/utils";
 
 export function HomePage() {
@@ -15,7 +26,7 @@ export function HomePage() {
           <h1 className="text-4xl font-bold tracking-tight">
             Next.js Professional Setup
           </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <p className="text-muted-foreground mt-4 text-lg">
             Arquitectura escalable con TypeScript, TailwindCSS y Radix UI
           </p>
         </div>
@@ -70,19 +81,19 @@ export function HomePage() {
           <CardContent>
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <div className="h-4 w-4 rounded-full bg-primary" />
+                <div className="bg-primary h-4 w-4 rounded-full" />
                 <span className="text-sm">Primary</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-4 w-4 rounded-full bg-secondary" />
+                <div className="bg-secondary h-4 w-4 rounded-full" />
                 <span className="text-sm">Secondary</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-4 w-4 rounded-full bg-accent" />
+                <div className="bg-accent h-4 w-4 rounded-full" />
                 <span className="text-sm">Accent</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-4 w-4 rounded-full bg-muted" />
+                <div className="bg-muted h-4 w-4 rounded-full" />
                 <span className="text-sm">Muted</span>
               </div>
             </div>
