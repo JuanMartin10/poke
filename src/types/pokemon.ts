@@ -1,6 +1,10 @@
 export interface Pokemon {
   id: number;
   name: string;
+  species: {
+    name: string;
+    url: string;
+  };
   sprites: {
     front_default: string;
     other: {
@@ -31,6 +35,9 @@ export interface PokemonSpecies {
   generation: {
     name: string;
   };
+  evolution_chain: {
+    url: string;
+  };
 }
 
 export interface PokemonWithDetails {
@@ -45,4 +52,59 @@ export interface PokemonPageResponse {
   pokemon: PokemonWithDetails[];
   nextPage?: number | undefined;
   hasMore: boolean;
+}
+
+export interface EvolutionChain {
+  id: number;
+  chain: EvolutionChainNode;
+}
+
+export interface EvolutionChainNode {
+  species: {
+    name: string;
+    url: string;
+  };
+  evolves_to: EvolutionChainNode[];
+}
+
+export interface PokemonEvolution {
+  id: number;
+  name: string;
+  evolutionFamily: string[];
+}
+
+export interface PokemonTypeResponse {
+  count: number;
+  results: {
+    name: string;
+    url: string;
+  }[];
+}
+
+export interface PokemonGenerationResponse {
+  count: number;
+  results: {
+    name: string;
+    url: string;
+  }[];
+}
+
+export interface GenerationDetails {
+  id: number;
+  name: string;
+  pokemon_species: {
+    name: string;
+    url: string;
+  }[];
+}
+
+export interface TypeDetails {
+  id: number;
+  name: string;
+  pokemon: {
+    pokemon: {
+      name: string;
+      url: string;
+    };
+  }[];
 }
